@@ -3,9 +3,8 @@ import pickle
 import pandas as pd
 
 from django.shortcuts import render, HttpResponseRedirect
-from django.http import Http404
 from django.urls import reverse
-from django.views.generic import TemplateView
+from pages.models import Item, ToDoList
 
 def homePageView(request):
     return render(request, 'home.html', {
@@ -24,10 +23,6 @@ def homePost(request):
         # Extract value from request object by control name
         currentChoice = request.POST['choice']
         gmatStr = request.POST['gmat']
-        # print("Just before Heesun's breakpoint")
-        # pdb.set_trace()
-        # breakpoint()
-        # print("Just after breakpoint")
 
         # Crude debugging effort
         print("*** Years work experience: " + str(currentChoice))
@@ -82,3 +77,11 @@ def aboutPageView(request):
 def heesunPageView(request):
     return render(request, 'heesun.html')
 
+def todos(request):
+    print("*** Inside todos()")
+    items = Item.objects
+    itemErrandDetail = items.select_related('todolist')
+    print(itemErrandDetail[0].todolist.name)
+    return render(request, 'ToDoItems.html',{
+        'TodoItemDetail': itemErrandDetail
+    })
